@@ -5,9 +5,9 @@ GROUP NAME:
 [Enter your group name]
 
 GROUP MEMBERS:
-1. [Member 1 full name]
-2. [Member 2 full name]
-3. [Member 3 full name, if applicable]
+1. [VIMA HAYAHAY]
+2. [BEVERLY C. ABELLA]
+3. [ALTHEA FAITH J. CURATO]
 
 PROJECT DESCRIPTION
 WordWise is a responsive, single-page dictionary application. Users enter an English word and the app retrieves definitions, parts of speech, phonetic spelling, example sentences when available, and audio pronunciation when available.

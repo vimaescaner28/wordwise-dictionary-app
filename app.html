@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WordWise | Dictionary</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body class="app-page">
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">W</span> WordWise</a>
+    <nav><a href="index.html">Portfolio</a><a class="active" href="app.html">Dictionary App</a></nav>
+  </header>
+  <main class="container app-container">
+    <a class="back-link" href="index.html">← Back to portfolio</a>
+    <section class="app-intro">
+      <p class="eyebrow">YOUR POCKET DICTIONARY</p>
+      <h1>What word are you<br><span>looking for?</span></h1>
+      <p>Search an English word to discover its meaning, pronunciation, and examples.</p>
+    </section>
+    <section class="search-card">
+      <form id="search-form">
+        <label for="word-input">Enter an English word</label>
+        <div class="search-row">
+          <input id="word-input" name="word" type="text" placeholder="e.g. curiosity" autocomplete="off" required>
+          <button class="button" id="search-button" type="submit">Search <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+      <div class="suggestions"><span>Try:</span> <button type="button" class="suggestion" data-word="serendipity">serendipity</button><button type="button" class="suggestion" data-word="brave">brave</button><button type="button" class="suggestion" data-word="wonder">wonder</button></div>
+    </section>
+    <div id="status" class="status" role="status" aria-live="polite">Enter a word above to get started.</div>
+    <section id="results" class="results" aria-live="polite"></section>
+    <p class="api-credit">Live results provided by <a href="https://dictionaryapi.dev/" target="_blank" rel="noopener">Free Dictionary API</a>.</p>
+  </main>
+  <footer class="site-footer"><span>WordWise · Dictionary Application</span><a href="index.html">Group Portfolio</a></footer>
+</body>
+</html>

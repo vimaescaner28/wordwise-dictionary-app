@@ -38,12 +38,20 @@ function addDefinitionSection(entry) {
   }
   card.appendChild(head);
 
-  (entry.meanings || []).forEach(meaning => {
+  // Support both the original Free Dictionary API and the backup API format.
+  const meanings = entry.meanings || entry.entries || [];
+  meanings.forEach(meaning => {
     card.appendChild(makeElement("span", "part-of-speech", meaning.partOfSpeech || "Meaning"));
-    (meaning.definitions || []).slice(0, 4).forEach((definition, index) => {
+    const definitions = meaning.definitions || meaning.senses || [];
+    definitions.slice(0, 4).forEach((definition, index) => {
       const block = makeElement("div", "definition");
-      block.appendChild(makeElement("p", "", `${index + 1}. ${definition.definition || "No definition provided."}`));
-      if (definition.example) block.appendChild(makeElement("p", "example", `Example: “${definition.example}”`));
+      const definitionText = definition.definition || definition.gloss || "No definition provided.";
+      block.appendChild(makeElement("p", "", `${index + 1}. ${definitionText}`));
+      const example = definition.example || (Array.isArray(definition.examples) ? definition.examples[0] : "");
+      if (example) {
+        const exampleText = typeof example === "string" ? example : (example.text || "");
+        if (exampleText) block.appendChild(makeElement("p", "example", `Example: “${exampleText}”`));
+      }
       block.appendChild(document.createElement("div"));
       card.appendChild(block);
     });
@@ -69,16 +77,20 @@ async function searchWord(rawWord) {
   showStatus(`Looking up “${word}”…`, "loading");
 
   try {
-    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+    const response = await fetch(`https://freedictionaryapi.com/api/v1/entries/en/${encodeURIComponent(word)}`);
     if (response.status === 404) {
       throw new Error(`We couldn't find “${word}”. Check the spelling or try another word.`);
     }
     if (!response.ok) {
       throw new Error("The dictionary service is temporarily unavailable. Please try again.");
     }
-    const data = await response.json();
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("No dictionary results were returned. Please try another word.");
+    const payload = await response.json();
+    // Backup API returns one object containing an entries array.
+    const data = Array.isArray(payload) ? payload : (payload.entries || []).length
+      ? [{ word: payload.word || word, entries: payload.entries }]
+      : [];
+    if (data.length === 0) {
+      throw new Error(`We couldn't find “${word}”. Check the spelling or try another word.`);
     }
     data.forEach(entry => resultsBox.appendChild(addDefinitionSection(entry)));
     showStatus(`Found ${data.length} result${data.length === 1 ? "" : "s"} for “${word}”.`);
